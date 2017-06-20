@@ -9,6 +9,6 @@ getUserMedia({audio: true}, function (err, stream) {
     if (err) {
        console.log('failed')
     } else {
-       console.log('got a stream', stream)  
+       console.log('got a stream', stream.getAudioTracks())  
     }
 });

@@ -4,7 +4,8 @@
   "description": "",
   "main": "getusermedia.js",
   "scripts": {
-    "build": "browserify getusermedia.js | indexhtmlify > getusermedia.html"
+    "build": "browserify getusermedia.js | indexhtmlify > getusermedia.html",
+    "watch": "budo getusermedia.js"
   },
   "author": "",
   "license": "ISC",
