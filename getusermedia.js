@@ -1,14 +1,17 @@
 var AudioContext = window.AudioContext || window.webkitAudioContext
 var audioCtx = new AudioContext()
+var analyser = audioCtx.createAnalyser();
 var getUserMedia = require('getusermedia')
  
 getUserMedia({audio: true}, function (err, stream) {
-    // if the browser doesn't support user media 
-    // or the user says "no" the error gets passed 
-    // as the first argument. 
-    if (err) {
-       console.log('failed')
-    } else {
-       console.log('got a stream', stream.getAudioTracks())  
-    }
+  if (err) {
+     console.log('failed')
+  } 
+  else source = audioCtx.createMediaStreamSource(stream);
+  source.connect(analyser);
+  analyser.fftSize = 2048;
+  var bufferLength = analyser.frequencyBinCount;
+  var dataArray = new Float32Array(bufferLength);
+  analyser.getFloatFrequencyData(dataArray);
+  console.log(dataArray)
 });
