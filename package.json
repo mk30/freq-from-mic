@@ -1,0 +1,14 @@
+{
+  "name": "freq-from-mic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "getusermedia.js",
+  "scripts": {
+    "build": "browserify getusermedia.js | indexhtmlify > getusermedia.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "getusermedia": "^2.0.1"
+  }
+}
