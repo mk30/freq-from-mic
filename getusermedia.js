@@ -1,16 +1,16 @@
 var AudioContext = window.AudioContext || window.webkitAudioContext
-var audioCtx = new AudioContext()
-var analyser = audioCtx.createAnalyser()
+var context = new AudioContext()
 var getUserMedia = require('getusermedia')
  
 getUserMedia({audio: true}, function (err, stream) {
   if (err) {
-     console.log('failed')
+     console.log(err)
   } 
-  else source = audioCtx.createMediaStreamSource(stream)
-  source.connect(analyser)
-  analyser.fftSize = 2048
-  var dataArray = new Float32Array(analyser.frequencyBinCount)
-  analyser.getFloatFrequencyData(dataArray)
-  console.log(dataArray)
+  else var input = context.createMediaStreamSource(stream)
+  var processor = context.createScriptProcessor(1024,1,1);
+  input.connect(processor);
+  processor.connect(context.destination);
+  processor.onaudioprocess = function(e){
+    console.log(e.inputBuffer);
+  };
 });
