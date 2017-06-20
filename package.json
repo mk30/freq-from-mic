@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "getusermedia": "^2.0.1"
+    "getusermedia": "^2.0.1",
+    "ndarray": "^1.0.18",
+    "ndarray-complex": "^1.0.3",
+    "ndarray-fft": "^1.0.3"
   }
 }
