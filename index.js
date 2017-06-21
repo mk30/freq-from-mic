@@ -1,5 +1,5 @@
 var glsl = require('glslify')
-var regl = require('regl')()
+var regl = require('regl')({extensions: ['oes_texture_float']})
 var camera = require('regl-camera')(regl, {
   distance: 4, far: 5000
 })
@@ -26,25 +26,17 @@ function makecatmug (regl) {
       precision mediump float;
       #pragma glslify: snoise = require('glsl-noise/simplex/3d')
       uniform mat4 projection, view, model;
-      uniform float time;
+      uniform float time, texwidth;
+      uniform sampler2D tex;
       attribute vec3 position, normal;
-      varying vec3 vnorm, vpos, dvpos;
+      varying vec3 vnorm, vpos;
       void main () {
         vnorm = normal;
-        //set ripplespeed low for faster ripples.
-        float dxripplespeed = sin(time)*15.0;
-        float dzripplespeed = cos(time/5.0)*5.0;
-        float dx = snoise(position+2.0*
-          pow(abs(sin(time/dxripplespeed)), 8.4))*0.1;
-        float dz = snoise(position+
-          pow(abs(cos(time/dzripplespeed)), 6.4))*0.1;
-        vpos = position;
-        dvpos = position +
-          (vec3(dx,0,dz)
-          + vec3(0,position.y/12.0-0.03*sin(time*2.0),position.z/12.0
-          + 0.03*sin(time)));
+        float x = 0.0
+          + length(texture2D(tex, vec2(0.1,0.5)))*0.1;
+        vpos = position + vnorm * x;
         gl_Position = projection * view * model *
-        vec4(dvpos,1);
+        vec4(vpos,1);
       }
     `,
     attributes: {
@@ -58,7 +50,9 @@ function makecatmug (regl) {
         Math.sin(theta)/2)
         return model
       },
-      time: regl.context('time')
+      time: regl.context('time'),
+      tex: regl.prop('tex'),
+      texwidth: regl.prop('texwidth')
     },
     primitive: "triangles",
     blend: {
@@ -72,18 +66,20 @@ function makecatmug (regl) {
 var draw = {
   catmug: makecatmug(regl)
 }
-regl.frame(function (context) {
-  var getfreqs = require('./getusermedia.js')
-  getfreqs(function(data, samplerate){
-    for (var i=0;i<data.length/2;i++){
-      var freq = i * samplerate / data.length  
-      if (data[i]>3000){
-        console.log(freq, data[i])
-      }
-    }
+var getfreqs = require('./getusermedia.js')
+getfreqs(function(data, samplerate){
+  mictex({
+    data: data,
+    width: data.length/4,
+    height: 1
   })
+  width = data.length/4
+})
+var width = 0
+var mictex = regl.texture()
+regl.frame(function (context) {
   regl.clear({ color: [0,0,0,1], depth: true })
   camera(function () {
-    draw.catmug()
+    draw.catmug({tex: mictex, texwidth: width})
   })
 })
