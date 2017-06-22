@@ -17,10 +17,10 @@ module.exports = function (f){
     processor.onaudioprocess = function(ev){
       var data = ev.inputBuffer.getChannelData(0)
       w.postMessage(data)
-      w.addEventListener('message', function (ev) {
-          fftdata = ev.data
-          f(fftdata, context.sampleRate)
-      })
     }
+  })
+  w.addEventListener('message', function (ev) {
+    fftdata = ev.data
+    f(fftdata, context.sampleRate)
   })
 }

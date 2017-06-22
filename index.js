@@ -33,7 +33,9 @@ function makecatmug (regl) {
       void main () {
         vnorm = normal;
         float x = 0.0
-          + length(texture2D(tex, vec2(0.1,0.5)))*0.1;
+          + log(1.0+length(texture2D(tex, vec2(0.001,0.5))))*0.01
+          + log(1.0+length(texture2D(tex, vec2(0.002,0.5))))*0.01
+          + log(1.0+length(texture2D(tex, vec2(0.0005,0.5))))*0.01;
         vpos = position + vnorm * x;
         gl_Position = projection * view * model *
         vec4(vpos,1);
