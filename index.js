@@ -19,7 +19,7 @@ function makecatmug (regl) {
       varying vec3 vnorm, vpos;
       void main () {
         gl_FragColor =
-        vec4(cnoise(vnorm/sin(time)-vpos*3.0*sin(time/2.0)), 1.0);
+        vec4(cnoise(vnorm-vpos), 1.0);
       }
     `,
     vert: glsl`

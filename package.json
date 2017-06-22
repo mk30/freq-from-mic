@@ -21,9 +21,12 @@
     "ndarray-complex": "^1.0.3",
     "ndarray-fft": "^1.0.3",
     "regl": "^1.3.0",
-    "regl-camera": "^2.1.1"
+    "regl-camera": "^2.1.1",
+    "webworkify": "^1.4.0"
   },
   "browserify": {
-    "transform": ["glslify"]
+    "transform": [
+      "glslify"
+    ]
   }
 }
