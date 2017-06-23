@@ -19,12 +19,13 @@ function makecatmug (regl) {
       varying vec3 vnorm, vpos;
       void main () {
         gl_FragColor =
-        vec4(cnoise(vnorm-vpos), 1.0);
+        vec4(cnoise(vnorm+vpos), 1.0);
       }
     `,
     vert: glsl`
       precision mediump float;
       #pragma glslify: snoise = require('glsl-noise/simplex/3d')
+      #pragma glslify: cnoise = require('glsl-curl-noise')
       uniform mat4 projection, view, model;
       uniform float time, texwidth;
       uniform sampler2D tex;
@@ -32,11 +33,22 @@ function makecatmug (regl) {
       varying vec3 vnorm, vpos;
       void main () {
         vnorm = normal;
+        /*
+        vec4 fre1 = texture2D(tex, vec2(0.01,0.5));
+        vec4 fre2 = texture2D(tex, vec2(0.02,0.5));
+        vec4 fre3 = texture2D(tex, vec2(0.005,0.5));
+        */
+        float q = (position.y+2.0)/4.0;
+        vec4 fre3 = texture2D(tex, vec2(position.y*0.1,0.5));
         float x = 0.0
-          + log(1.0+length(texture2D(tex, vec2(0.001,0.5))))*0.01
-          + log(1.0+length(texture2D(tex, vec2(0.002,0.5))))*0.01
-          + log(1.0+length(texture2D(tex, vec2(0.0005,0.5))))*0.01;
-        vpos = position + vnorm * x;
+        /*
+          + log(1.0+length(fre1))*0.01
+          + log(1.0+length(fre2))*0.01
+        */
+          + log(1.0+length(fre3))*0.04;
+
+        vpos = position + vnorm * x + 
+        cnoise(position+sin(time))*0.1;
         gl_Position = projection * view * model *
         vec4(vpos,1);
       }
