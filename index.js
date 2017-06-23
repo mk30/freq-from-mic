@@ -25,6 +25,7 @@ function makecatmug (regl) {
     vert: glsl`
       precision mediump float;
       #pragma glslify: snoise = require('glsl-noise/simplex/3d')
+      #pragma glslify: cnoise = require('glsl-curl-noise')
       uniform mat4 projection, view, model;
       uniform float time, texwidth;
       uniform sampler2D tex;
